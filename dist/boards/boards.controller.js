@@ -14,72 +14,72 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BoardsController = void 0;
 const common_1 = require("@nestjs/common");
-const board_model_1 = require("./board.model");
+const board_status_enum_1 = require("./board-status-enum");
 const boards_service_1 = require("./boards.service");
 const create_board_dto_1 = require("./dto/create-board.dto");
 const update_board_status_dto_1 = require("./dto/update-board-status.dto");
+const board_status_validation_pipe_1 = require("./pipes/board-status-validation.pipe");
 let BoardsController = class BoardsController {
     constructor(boardsService) {
         this.boardsService = boardsService;
         this.logger = new common_1.Logger('BoardsController');
     }
     ;
+    getBoardById(id) {
+        return this.boardsService.getBoardById(id);
+    }
     getAllBoards() {
         return this.boardsService.getAllBoards();
     }
     createBoard(createBoardDto) {
         return this.boardsService.createBoard(createBoardDto);
     }
-    getBoardById(id) {
-        this.logger.debug(`id of parameters   >>>>   ${id}`);
-        return this.boardsService.getBoardById(id);
-    }
     deleteBoard(id) {
-        this.boardsService.deleteBoard(id);
-        return this.boardsService.getAllBoards();
+        return this.boardsService.deleteBoard(id);
     }
     updateBoardStatus(id, status) {
-        const updateBoardStatusDto = new update_board_status_dto_1.UpdateBoardStatusDto(id, status);
-        return this.boardsService.updateBoardStatus(updateBoardStatusDto);
+        const updateBoarStatusDto = new update_board_status_dto_1.UpdateBoardStatusDto(id, status);
+        return this.boardsService.updateBoardStatus(updateBoarStatusDto);
     }
 };
 __decorate([
-    (0, common_1.Get)('/'),
+    common_1.Get('/:id'),
+    __param(0, common_1.Param('id')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", Array)
-], BoardsController.prototype, "getAllBoards", null);
-__decorate([
-    (0, common_1.Post)('/'),
-    __param(0, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [create_board_dto_1.CreateBoardDto]),
-    __metadata("design:returntype", Object)
-], BoardsController.prototype, "createBoard", null);
-__decorate([
-    (0, common_1.Get)('/:id'),
-    __param(0, (0, common_1.Param)('id')),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", Object)
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Promise)
 ], BoardsController.prototype, "getBoardById", null);
 __decorate([
-    (0, common_1.Delete)('/:id'),
-    __param(0, (0, common_1.Param)('id')),
+    common_1.Get(),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", Array)
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], BoardsController.prototype, "getAllBoards", null);
+__decorate([
+    common_1.Post(),
+    common_1.UsePipes(common_1.ValidationPipe),
+    __param(0, common_1.Body()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [create_board_dto_1.CreateBoardDto]),
+    __metadata("design:returntype", Promise)
+], BoardsController.prototype, "createBoard", null);
+__decorate([
+    common_1.Delete('/:id'),
+    __param(0, common_1.Param('id', common_1.ParseIntPipe)),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
 ], BoardsController.prototype, "deleteBoard", null);
 __decorate([
-    (0, common_1.Patch)('/:id/status'),
-    __param(0, (0, common_1.Param)('id')),
-    __param(1, (0, common_1.Body)('status')),
+    common_1.Patch('/:id/status'),
+    __param(0, common_1.Param('id', common_1.ParseIntPipe)),
+    __param(1, common_1.Body('status', board_status_validation_pipe_1.BoardStatusValidationPipe)),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String]),
-    __metadata("design:returntype", Object)
+    __metadata("design:paramtypes", [Number, String]),
+    __metadata("design:returntype", Promise)
 ], BoardsController.prototype, "updateBoardStatus", null);
 BoardsController = __decorate([
-    (0, common_1.Controller)('boards'),
+    common_1.Controller('boards'),
     __metadata("design:paramtypes", [boards_service_1.BoardsService])
 ], BoardsController);
 exports.BoardsController = BoardsController;

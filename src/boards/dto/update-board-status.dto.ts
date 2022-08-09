@@ -1,10 +1,10 @@
-import { BoardStatus } from "../board.model";
+import { BoardStatus } from "../board-status-enum";
 
 export class UpdateBoardStatusDto {
-    constructor(_id: string, _status: BoardStatus) {
+    constructor(_id: number, _status: BoardStatus) {
         this.id = _id;
         this.status = _status;
     }
-    id: string;
+    id: number;
     status: BoardStatus;
 }

@@ -9,17 +9,29 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CreateBoardDto = void 0;
-const class_validator_1 = require("class-validator");
-class CreateBoardDto {
-}
+exports.Board = void 0;
+const typeorm_1 = require("typeorm");
+const board_status_enum_1 = require("./board-status-enum");
+let Board = class Board extends typeorm_1.BaseEntity {
+};
 __decorate([
-    class_validator_1.IsNotEmpty(),
-    __metadata("design:type", String)
-], CreateBoardDto.prototype, "title", void 0);
+    typeorm_1.PrimaryGeneratedColumn(),
+    __metadata("design:type", Number)
+], Board.prototype, "id", void 0);
 __decorate([
-    class_validator_1.IsNotEmpty(),
+    typeorm_1.Column(),
     __metadata("design:type", String)
-], CreateBoardDto.prototype, "description", void 0);
-exports.CreateBoardDto = CreateBoardDto;
-//# sourceMappingURL=create-board.dto.js.map
+], Board.prototype, "title", void 0);
+__decorate([
+    typeorm_1.Column(),
+    __metadata("design:type", String)
+], Board.prototype, "description", void 0);
+__decorate([
+    typeorm_1.Column(),
+    __metadata("design:type", String)
+], Board.prototype, "status", void 0);
+Board = __decorate([
+    typeorm_1.Entity()
+], Board);
+exports.Board = Board;
+//# sourceMappingURL=board.entity.js.map
