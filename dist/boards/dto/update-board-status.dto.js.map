@@ -1,0 +1,1 @@
+{"version":3,"file":"update-board-status.dto.js","sourceRoot":"","sources":["../../../src/boards/dto/update-board-status.dto.ts"],"names":[],"mappings":";;;AAEA,MAAa,oBAAoB;IAC7B,YAAY,GAAW,EAAE,OAAoB;QACzC,IAAI,CAAC,EAAE,GAAG,GAAG,CAAC;QACd,IAAI,CAAC,MAAM,GAAG,OAAO,CAAC;IAC1B,CAAC;CAGJ;AAPD,oDAOC"}
