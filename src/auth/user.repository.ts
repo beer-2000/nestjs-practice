@@ -3,6 +3,7 @@ import { EntityRepository, Repository } from "typeorm";
 import { AuthCredentialDto } from "./dto/auth-credential.dto";
 import { User } from "./user.entity";
 import * as bcrypt from 'bcryptjs';
+import { Board } from "src/boards/board.entity";
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
@@ -24,5 +25,10 @@ export class UserRepository extends Repository<User> {
             }
             throw new InternalServerErrorException;
         }
+    }
+
+    async saveBoardInUser(user: User, board: Board): Promise<void> {
+        user.boards.push(board);
+        await this.save(user);
     }
 }

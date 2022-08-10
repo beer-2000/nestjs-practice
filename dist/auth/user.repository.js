@@ -11,6 +11,7 @@ const common_1 = require("@nestjs/common");
 const typeorm_1 = require("typeorm");
 const user_entity_1 = require("./user.entity");
 const bcrypt = require("bcryptjs");
+const board_entity_1 = require("../boards/board.entity");
 let UserRepository = class UserRepository extends typeorm_1.Repository {
     constructor() {
         super(...arguments);
@@ -31,6 +32,10 @@ let UserRepository = class UserRepository extends typeorm_1.Repository {
             }
             throw new common_1.InternalServerErrorException;
         }
+    }
+    async saveBoardInUser(user, board) {
+        user.boards.push(board);
+        await this.save(user);
     }
 };
 UserRepository = __decorate([

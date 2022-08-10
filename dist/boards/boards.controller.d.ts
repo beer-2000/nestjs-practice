@@ -1,3 +1,4 @@
+import { User } from 'src/auth/user.entity';
 import { BoardStatus } from './board-status-enum';
 import { Board } from './board.entity';
 import { BoardsService } from './boards.service';
@@ -7,8 +8,8 @@ export declare class BoardsController {
     private logger;
     constructor(boardsService: BoardsService);
     getBoardById(id: number): Promise<Board>;
-    getAllBoards(): Promise<Board[]>;
-    createBoard(createBoardDto: CreateBoardDto): Promise<Board | void>;
-    deleteBoard(id: any): Promise<Board | void>;
+    getBoardsByUserId(user: User): Promise<Board[]>;
+    createBoard(createBoardDto: CreateBoardDto, user: User): Promise<Board | void>;
+    deleteBoard(id: any, user: User): Promise<Board | void>;
     updateBoardStatus(id: number, status: BoardStatus): Promise<Board>;
 }

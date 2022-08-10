@@ -1,4 +1,5 @@
-import { Logger } from "@nestjs/common";
+import { Logger, UnauthorizedException } from "@nestjs/common";
+import { User } from "src/auth/user.entity";
 import { EntityRepository, Repository } from "typeorm";
 import { BoardStatus } from "./board-status-enum";
 import { Board } from "./board.entity";
@@ -13,26 +14,35 @@ export class BoardRepository extends Repository<Board> {
     async findOneById(id: number): Promise<Board> {
         return await this.findOne(id);
     }
-    
+
     async findAllBoards(): Promise<Board[]> {
         return await this.find();
     }
 
-    async createBoard(createBoardDto: CreateBoardDto): Promise<Board> {
-        const { title, description } = createBoardDto;
-        const board = await this.create({
-                title: title,
-                description: description,
-                status: BoardStatus.PUBLIC,
-            })
-        // const board = new Board();
-        await this.save(board);
-        return board;
+    async findBoardsByUserId(userId: number): Promise<Board[]> {
+        const query = this.createQueryBuilder('board');
+        query.where('board.userId = :userId', { userId: userId });
+        const boards = await query.getMany();
+        return boards;
     }
 
-    async deleteOneById(id: number): Promise<Board | void> {
+    async createBoard(createBoardDto: CreateBoardDto, user: User): Promise<Board> {
+        const { title, description } = createBoardDto;
+        const board = await this.create({
+            title: title,
+            description: description,
+            status: BoardStatus.PUBLIC,
+            user
+        })
+        await this.save(board);
+        const boardId = board.id;
+        const boardNew: Board = await this.findOneById(boardId);
+        return boardNew;
+    }
+
+    async deleteOneById(id: number, user: User): Promise<Board | void> {
         const board = await this.findOneById(id);
-        await this.delete(id);
+        await this.delete({ id, user });
         return board;
     }
 

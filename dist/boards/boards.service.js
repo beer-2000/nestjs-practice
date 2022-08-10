@@ -15,10 +15,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.BoardsService = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
+const user_entity_1 = require("../auth/user.entity");
+const user_repository_1 = require("../auth/user.repository");
 const board_repository_1 = require("./board.repository");
 let BoardsService = class BoardsService {
-    constructor(boardRepository) {
+    constructor(boardRepository, userRepository) {
         this.boardRepository = boardRepository;
+        this.userRepository = userRepository;
         this.logger = new common_1.Logger('BoardsController');
     }
     ;
@@ -30,13 +33,18 @@ let BoardsService = class BoardsService {
         return board;
     }
     async getAllBoards() {
-        return this.boardRepository.find();
+        return this.boardRepository.findAllBoards();
     }
-    createBoard(createBoardDto) {
-        return this.boardRepository.createBoard(createBoardDto);
+    async getBoardsByUserId(user) {
+        const userId = user.id;
+        return this.boardRepository.findBoardsByUserId(userId);
     }
-    async deleteBoard(id) {
-        const board = await this.boardRepository.deleteOneById(id);
+    async createBoard(createBoardDto, user) {
+        return await this.boardRepository.createBoard(createBoardDto, user);
+    }
+    async deleteBoard(id, user) {
+        this.logger.debug('deleteBoard');
+        const board = await this.boardRepository.deleteOneById(id, user);
         if (!board) {
             throw new common_1.NotFoundException(`Can't find Board with id ${id}`);
         }
@@ -54,7 +62,9 @@ let BoardsService = class BoardsService {
 BoardsService = __decorate([
     common_1.Injectable(),
     __param(0, typeorm_1.InjectRepository(board_repository_1.BoardRepository)),
-    __metadata("design:paramtypes", [board_repository_1.BoardRepository])
+    __param(0, typeorm_1.InjectRepository(user_repository_1.UserRepository)),
+    __metadata("design:paramtypes", [board_repository_1.BoardRepository,
+        user_repository_1.UserRepository])
 ], BoardsService);
 exports.BoardsService = BoardsService;
 //# sourceMappingURL=boards.service.js.map

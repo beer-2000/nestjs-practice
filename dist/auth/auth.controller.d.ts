@@ -6,5 +6,8 @@ export declare class AuthController {
     private logger;
     constructor(authService: AuthService);
     signUp(authCredentialDto: AuthCredentialDto): Promise<User>;
-    sighIn(authCredentialDto: AuthCredentialDto): Promise<string>;
+    sighIn(authCredentialDto: AuthCredentialDto): Promise<{
+        accessToken: string;
+    }>;
+    test(user: User): void;
 }
